@@ -32,5 +32,8 @@ ng generate component NOME_DO_COMPONENTE
 
 ng g c NOME_DO_COMPONENTE
 
-property binding é linkar um valor de um componente com um elemento angular, []
+property binding é linkar um valor de um componente com um elemento do DOM ou componentes angular, []
 
+como passar dados para um componente? avisar ao angular quais propriedades pode receber dados dos parents.
+
+@input ()
