@@ -1,0 +1,36 @@
+PARA COMEÇAR UMA APLICAÇÃO ANGULAR, USAR:
+
+ng new nome_da_aplicação --prefix=prefixo_dos_arquivos
+
+ng serve
+
+COMPONENTES SÃO PEQUENAS PARTES INDEPENDENTES E REUSÁVEIS
+ELEMENTOS PERSONALIZADOS
+
+import { Component } from '@angular/core'
+
+@Component({
+    selector: 'app-first',
+    templateUrl: './myfirst.component.html'
+    /**** template: `<h1>{{title}}</h1>
+                 <p>Welcome, {{user.name}}!</p>` ******/
+})
+
+export class MyFirstComponent{
+    
+    constructor() {}
+
+    title: string = 'My Star Wars Component!'
+
+    user = {name: 'Luke Skywalker'}
+
+}
+
+necessário informar o @NgModule
+
+ng generate component NOME_DO_COMPONENTE
+
+ng g c NOME_DO_COMPONENTE
+
+property binding é linkar um valor de um componente com um elemento angular, []
+
