@@ -37,3 +37,25 @@ property binding é linkar um valor de um componente com um elemento do DOM ou c
 como passar dados para um componente? avisar ao angular quais propriedades pode receber dados dos parents.
 
 @input ()
+
+O QUE É UMA DIRETIVA?
+
+adiciona comportamento ao elemento dom, porém não têm template.
+Podem ser componentes, estruturais ou de atributos
+
+*ngIf
+
+*ngFor
+
+EVENTOS sintaxe - ()
+EVENTEMMITER - this.myEvent.emit()
+
+é possível referenciar outras tags através de uma chamada
+    <button (click)="description.focus()">Focus!</button>
+    <br />
+    <textarea #description></textarea>
+
+ERROS SÃO REPORTADOS EM:
+
+- compilação do webpack
+- console do browser
