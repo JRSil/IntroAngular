@@ -59,3 +59,31 @@ ERROS SÃO REPORTADOS EM:
 
 - compilação do webpack
 - console do browser
+
+O QUE SÃO ROTAS?
+
+usando <router-outlet></router-outlet>
+
+mapeando as rotas:
+
+export const ROUTES: Route = [
+    { path: '', component: RestaurantsComponent },
+    { path: 'restaurant/:id', component: RestaurantComponent },
+    { path: 'about', component: AboutComponent },
+
+]
+
+e declarar no @NgModule
+
+@NgModule({
+    declarations: [...],
+    imports: [..., RouterModule.forRoot(ROUTES)]
+})
+export class AppModule
+
+COMO CHAMAR A ROTA
+
+existe um atributo routerLink
+<a routerLink="/restaurants">Restaurantes</a>
+ou então
+<a [routerLink]="['/restaurants']">Restaurantes</a>
