@@ -87,3 +87,111 @@ existe um atributo routerLink
 <a routerLink="/restaurants">Restaurantes</a>
 ou então
 <a [routerLink]="['/restaurants']">Restaurantes</a>
+
+O QUE SÃO SERVIÇOS
+
+Serviços são classes comuns usadas para injetar em componentes ou outros serviços,
+guardar dados.
+
+3 escopos:
+MÓDULO ..................... providers: []
+COMPONENTE E SEUS FILHOS ... providers: []
+SOMENTE COMPONENTE ......... viewProviders: []
+
+serviços podem solicitar injeção de outros serviços
+@Injectable() ...... apenas receber serviços
+
+exemplo Title
+Como o title fica no head e não faz parte do bootstrap,
+criaram esse serviço para alterá-lo
+
+A ideia de programação reativa é um evento acontece e os que estão identificados ficam esperando para fazer algo.
+listeners
+REACTIVE = ITERATOR + OBSERVER
+angular usa o RXJS
+
+Observable.from([1, 2, 3, 4, 5]) .............. STREAM
+    .map( x => x + 3 ) ........................ TRANSFORMAÇÃO
+    .filter(x => x% 2 == 0)
+    .subscribe(x => console.log(x))//4, 6, 8... LISTENER
+
+Diferença entre OBSERVABLE e PROMISES
+OBSERVABLE => Múltiplos Eventos
+PROMISES => Se resolve depois de um Evento
+
+Os métodos da API "HTTP" retornam OBSERVABLE<RESPONSE>
+
+get, post, put, delete, head, options
+
+this.http.get('/url')
+    .map( response => response.json() )
+    .subscribe( data => this.mydata = data )
+
+subscribe / unsubscribe
+
+unsubscribe para evitar memory leaks
+http, router e async não precisam de unsubscribe
+
+LIDANDO COM ERROS (subscribe / unsubscribe)
+
+operador catch
+
+save (myData){
+    return this.http.post('/url', JSON.stringify(myData))
+        .map(response => response.json())
+        .map(result => result.id).
+        catch(error => {
+            console.log(error)
+            Observable.throw(`Error posting ${myData}`)
+        })
+}
+
+CONFIGURANDO A API DE BACKEND (JSON-SERVER)
+
+npm install -g json-server
+
+json-server db.json
+
+COMO PASSAR E OBTER PARÂMETROS (ROTAS)
+
+export const ROUTES: Route = [
+    { path: 'restaurant/:id', component: RestaurantComponent }
+]
+
+<!-- PASSANDO UM PARÂMETRO -->
+<a [routerLink]="['/restaurants', restaurant.id]">Bakery</a>
+
+2 FORMAS DE OBTER PARÂMETROS
+
+- a partir de SNAPSHOT, que é uma "fotografia" dos parâmetros no momento que pedir.
+
+- SUBSCRIBE, se inscrevendo na rota e escutando a mudança de parâmetros.
+
+SNAPSHOT -> mais comum, mais usado
+
+export class MyComponent implements OnInit {
+    myObj: any
+
+    constructor(private route:ActivatedRoute) {}
+
+    ngOnInit(){
+        const id = this.route.snapshot.params['id']
+        this.myObj = // ...obter os dados baseado no id
+    }
+}
+
+SUBSCRIBE -> reactive programming
+
+export class MyComponent implements OnInit {
+    myObj: any
+
+    constructor(private route:ActivatedRoute) {}
+
+    ngOnInit(){
+        this.route.params.subscribe(params => {
+            const id = params['id']
+            this.myObj = // ...obter os dados baseado no id
+        })
+    }
+}
+
