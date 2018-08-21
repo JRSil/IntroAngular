@@ -195,3 +195,32 @@ export class MyComponent implements OnInit {
     }
 }
 
+O QUE SÃO PIPES
+
+são responsáveis por transformações de dados para uma apresentação diferente.
+ex: lowercase, uppercase
+
+O QUE SÃO TEMPLATE FORMS
+
+forma declarativa de configurar os formulários no template
+
+ngModel - usado nos templates
+
+valid | invalid
+pristine (estado inicial) | dirty (usuário alterou algo)
+untouched (estado inicial) | touched (usuário entrou no campo)
+
+#ipt="ngModel"
+*ngIf="ipt.invalid"
+
+Validators
+
+required - campo obrigatório
+pattern - regex - recebe um padrão regular
+minlength & maxlength - recebe um número e checam se está válido
+
+Para dar um feedback ao usuário, o angular associa classes do css
+
+ng-valid | ng-invalid
+ng-pristine | ng-dirty
+ng-untouched | ng-touched
