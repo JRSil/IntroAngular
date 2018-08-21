@@ -224,3 +224,5 @@ Para dar um feedback ao usuário, o angular associa classes do css
 ng-valid | ng-invalid
 ng-pristine | ng-dirty
 ng-untouched | ng-touched
+
+Atributo PATTERN no input, possiblita o uso de regex para validação.
