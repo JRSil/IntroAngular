@@ -32,9 +32,11 @@ ng generate component NOME_DO_COMPONENTE
 
 ng g c NOME_DO_COMPONENTE
 
-property binding é linkar um valor de um componente com um elemento do DOM ou componentes angular, []
+property binding é linkar um valor de um componente com um elemento do DOM 
+ou componentes angular, []
 
-como passar dados para um componente? avisar ao angular quais propriedades pode receber dados dos parents.
+como passar dados para um componente? 
+avisar ao angular quais propriedades pode receber dados dos parents.
 
 @input ()
 
@@ -105,8 +107,9 @@ exemplo Title
 Como o title fica no head e não faz parte do bootstrap,
 criaram esse serviço para alterá-lo
 
-A ideia de programação reativa é um evento acontece e os que estão identificados ficam esperando para fazer algo.
-listeners
+A ideia de programação reativa é um evento acontece e os que estão identificados 
+ficam esperando para fazer algo.listeners
+
 REACTIVE = ITERATOR + OBSERVER
 angular usa o RXJS
 
@@ -226,3 +229,130 @@ ng-pristine | ng-dirty
 ng-untouched | ng-touched
 
 Atributo PATTERN no input, possiblita o uso de regex para validação.
+
+REACTIVE FORMS
+
+nova forma de implementar formulários
+
+export class UserComponent implements OnInit {
+    userForm: FormGroup
+
+    constructor(private fb: FormBuilder){}
+
+    ngOnInit(){
+        this.userForm = this.fb.group({
+            //userName: '',
+            //password: ''
+            
+            //username: this.fb.control(''),
+            //password: this.fb.control('') ......... FormControl
+            
+            //os validadores podem ser inseridos em forma de array
+            
+            username: this.fb.control('', [Validators.required]),
+            password: this.fb.control('', [Validators.minlength(3)])
+            address: this.fb.group({
+                street: '',
+                zip: ''
+            })
+        })
+    }
+}
+
+REACTIVE FORMS - TEMPLATE
+
+<!-- SEM ngModel -->
+<form [formGroup]="userForm">
+    <input type="text" formControlName="username" />
+    <input type="password" formControlName="password" />
+
+    <div formGroupName="address">
+        <input type="text" formControlName="street" />
+        <input type="text" formControlName="zip" />
+    </div>
+</form>
+
+O QUE SÃO MÓDULOS
+
+itens de configuração framework, agrega componentes, diretivas, serviços ou pipes
+(organização da aplicação)
+
+tipos
+- root module (bootstrap da aplicação)
+- shared (componentes, diretivas e pipes)
+- core modules (apenas serviços)
+- feature module
+
+WEB ANIMATIONS API - Animações
+
+a partir do angular 4, é possível importar @angular/animations
+
+@Component({
+    template: `<button [@stretch]="buttonState">Click</button>`
+    animations: [
+        trigger('stretch' , [
+            state('normal', style({width: '40px'})),
+            state('stretched', style({width: '120px'})),
+            //transition('normal => stretched', animate('500ms')),
+            //transition('stretched => normal', animate('500ms'))
+            transition('* => *', animate('500ms'))
+        ])
+    ]
+})
+export class ButtonComponent { buttonState = 'normal' }
+
+- NECESSÁRIO INSTALAR MÓDULOS
+npm install --save @angular/animations
+npm install --save web-animations-js
+
+corrigir o polyfills.ts 
+import 'web-animations-js/web-animations.min.js'
+
+ANIMAÇÕES COM KEYFRAMES
+
+são animações que contém vários marcos ou passos.
+é colocado no fim do atributo animate
+
+transition('st1 => st2', [
+    animate('500ms 0s ease-in-out', keyframes ([ //recebe um array de estilos
+        style({transform:'transform(0px,0px)', offset:0}),
+        style({transform:'transform(100px,0px)', offset:0.6}), //offset vai de 0 a 1
+        style({transform:'transform(140px,-30px)', offset:1})
+    ]))
+])
+//não necessariamente precisa ser só transform
+transition('st1 => st2', [
+    animate('500ms 0s ease-in-out', keyframes ([
+        style({opacity: 0, width: '100px', offset:0}),
+        style({opacity: 0.8, width: '120px', offset:0.8}),
+        style({opacity: 1, width: '100px'', offset:1})
+    ]))
+])
+
+@angular/animations - web-animations-js (polyfill)
+browser animations module (app module)
+
+para definir
+utilizar função trigger,
+podem ter estilos
+pode utilizar estados especiais como void e wildcard
+    - wildcard para representar uma transição pra qualquer estado
+    - void para representar o estado quando o elemento não está no DOM
+
+função animate define:
+    - duração: ms/s
+    - delay: ms/s
+    - aceleração (easing)
+
+keyframes possibilitam animações mais complexas, por utilizar vários marcos.
+
+Propriedades:
+CSS3 Transitions
+CSS3 Animations
+w3.org/TR/css3-transitions/#animatable-properties
+
+NG BUILD - mesma função do ng serve, porém prepara tudo para funcionar dessa forma, 
+ao invés de rodar em tempo real
+
+ng build --prod
+faz a compilação para produção
