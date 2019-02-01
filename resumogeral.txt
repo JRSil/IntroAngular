@@ -1,3 +1,8 @@
+npm install -g @angular/cli
+
+ng -v
+node -v
+
 PARA COMEÇAR UMA APLICAÇÃO ANGULAR, USAR:
 
 ng new nome_da_aplicação --prefix=prefixo_dos_arquivos
@@ -7,9 +12,11 @@ ng serve
 COMPONENTES SÃO PEQUENAS PARTES INDEPENDENTES E REUSÁVEIS
 ELEMENTOS PERSONALIZADOS
 
+Possuem uma classe, um template e um selector (tag que será utilizada pra executá-los)
+
 import { Component } from '@angular/core'
 
-@Component({
+@Component({//.....................DECORATOR
     selector: 'app-first',
     templateUrl: './myfirst.component.html'
     /**** template: `<h1>{{title}}</h1>
@@ -28,12 +35,23 @@ export class MyFirstComponent{
 
 necessário informar o @NgModule
 
+@NgModule({
+    declarations: [MyFirstComponent]
+})
+export class appModule {}
+
 ng generate component NOME_DO_COMPONENTE
 
 ng g c NOME_DO_COMPONENTE
 
 property binding é linkar um valor de um componente com um elemento do DOM 
 ou componentes angular, []
+
+//no componente
+user = {name: 'Luke Skywalker'}
+
+<!--no template do componente-->
+<input type="text" [value]="user.name">
 
 como passar dados para um componente? 
 avisar ao angular quais propriedades pode receber dados dos parents.
