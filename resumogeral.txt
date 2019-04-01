@@ -67,7 +67,24 @@ Podem ser componentes, estruturais ou de atributos
 
 *ngFor
 
+<div [ngSwitch]="profile">
+    <p *ngSwitchCase="root">You can read & write</p>
+    <p *ngSwitchCase="user">You can read</p>
+    <p *ngSwitchCaseDefault>Go back, please!</p>
+</div>
+
+OPERADOR DE NAVEGAÇÃO SEGURA - é o "?"
+*ngIf="student?.isJedi"
+
 EVENTOS sintaxe - ()
+Pode chamar variável no evento, ex: $event
+
+<button (click)="clicked($event)">Focus!</button>
+
+no caso de keydown, é possível colocar a tecla depois do ponto
+
+<input (keydown.space)="KeyDown($event)">
+
 EVENTEMMITER - this.myEvent.emit()
 
 é possível referenciar outras tags através de uma chamada
@@ -108,6 +125,13 @@ existe um atributo routerLink
 ou então
 <a [routerLink]="['/restaurants']">Restaurantes</a>
 
+O QUE É INJEÇÃO DE DEPENDÊNCIA?
+
+É um padrão de projeto onde a aplicação deixa de instanciar seus objetos manualmente
+e passa a depender do framework para obter esses objetos.
+
+Ele gerencia a instanciação dos objetos e suas dependências.
+
 O QUE SÃO SERVIÇOS
 
 Serviços são classes comuns usadas para injetar em componentes ou outros serviços,
@@ -125,7 +149,7 @@ exemplo Title
 Como o title fica no head e não faz parte do bootstrap,
 criaram esse serviço para alterá-lo
 
-A ideia de programação reativa é um evento acontece e os que estão identificados 
+A ideia de programação reativa é um evento acontece e os que estão interessados
 ficam esperando para fazer algo.listeners
 
 REACTIVE = ITERATOR + OBSERVER
@@ -299,7 +323,15 @@ tipos
 - root module (bootstrap da aplicação)
 - shared (componentes, diretivas e pipes)
 - core modules (apenas serviços)
-- feature module
+- feature module (implementações de funcionalidades)
+
+@NGModule({
+    declarations: [...],
+    imports: [...],
+    providers: [...],
+    exports: [...]
+})
+export class MyModule{}
 
 WEB ANIMATIONS API - Animações
 
@@ -319,8 +351,14 @@ a partir do angular 4, é possível importar @angular/animations
 })
 export class ButtonComponent { buttonState = 'normal' }
 
+O Angular fornece 2 estados, que são:
+
+wildcard (*) Representa qualquer estado
+
+void - Transição que não está na árvore de componentes ainda, ou que vai sair da árvore
+
 - NECESSÁRIO INSTALAR MÓDULOS
-npm install --save @angular/animations
+npm install --save @angular/animations@4.0.0
 npm install --save web-animations-js
 
 corrigir o polyfills.ts 
@@ -374,3 +412,36 @@ ao invés de rodar em tempo real
 
 ng build --prod
 faz a compilação para produção
+
+python -m SimpleHTTPServer 8000
+Não é possível acessar um link diretamente, somente entrando pela home. 
+
+Para resolver este problema, usamos a estratégia de navegação HASH.
+
+import {LocationStrategy, HashLocationStrategy} from '@angular/common';
+providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, {provide: LOCALE_ID, useValue: 'pt-BR'}]
+
+no app.module.ts
+
+Configurar app.api.ts, usando arquivos da pasta environment.
+
+DEPLOY NO APACHE HTTP SERVER
+
+levar o conteudo para a pasta, após o ng build --prod
+no meu caso, htdocs...
+
+reescrever a regra no .htaccess ou no arquivo do apache "httpd.conf" => document_root:
+
+RewriteEngine On
+    # If an existing asset or directory is requested go to it as it is
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule ^ - [L]
+    # If the requested resource doesn't exist, use index.html
+RewriteRule ^ /index.html
+
+no HTTPD.CONF é necessário habilitar o LoadModule rewrite_module
+
+CASO FAÇA PELO .HTACCESS...
+
+Necessário alterar o "AllowOverride" para "All" no HTTPD.CONF
