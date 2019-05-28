@@ -1,7 +1,23 @@
+INSTALAR
+
+npm i typescript -g
+
 npm install -g @angular/cli
 
 ng -v
 node -v
+
+ANIMAÇÕES
+
+npm install --save @angular/animations@4.0.0
+npm install --save web-animations-js
+
+BACKEND
+
+npm install -g json-server
+npm i nodemon -g
+
+nodemon --watch backend backend/dist/server.js
 
 PARA COMEÇAR UMA APLICAÇÃO ANGULAR, USAR:
 
@@ -445,3 +461,112 @@ no HTTPD.CONF é necessário habilitar o LoadModule rewrite_module
 CASO FAÇA PELO .HTACCESS...
 
 Necessário alterar o "AllowOverride" para "All" no HTTPD.CONF
+
+\\\\\\\\\\\\\\\\\\\\*****  ANGULAR 4.3  *****/////////////////////
+
+Novo módulo - HTTPCLIENT
+
+Nova modalidade HTTP INTERCEPTORS
+Capaz de modificar requests antes deles serem processados
+
+Mudanças no import
+
+Para usar o módulo antigo, era necessário importar o módulo HttpModule e declarar na lista de imports
+
+import {HttpModule} from '@angular/http'
+@NgModule({
+    imports: [HttpModule]
+})
+export class AppModule {}
+
+Agora muda para:
+
+import {HttpClientModule} from '@angular/common/http'
+@NgModule({
+    imports: [HttpClientModule]
+})
+export class AppModule {}
+
+Isso significa que não é mais necessário adicionar o pacote do módulo anterior no package.json da aplicação.
+
+Não injetamos mais http, agora injetamos o token HttpClient
+
+import {HttpClient} from '@angular/common/http'
+@Injectable()
+export class MyService{
+    constructor(private http: HttpClient){}
+}
+
+Possui os mesmos métodos: GET, POST, DELETE, PUT...
+A vantagem é que não precisam do .map para retornar o corpo da resposta, respostas tipadas.
+
+Ao usar o módulo antigo, tínhamos:
+
+restaurantById(id: string): Observable<Restaurant> {
+    return this.http.get(``restaurants/${id})
+                    .map(response => response.json())
+}
+
+Da nova forma, fica assim:
+
+restaurantById(id: string): Observable<Restaurant> {
+    return this.http.get<Restaurant>(``restaurants/${id})
+}
+
+Se precisar acessar a resposta, diretamente
+
+this.http.get<Restaurant[]>(`/restaurants`, {observe: 'response'})
+        .subscribe(resp => {
+            resp.headers.get('X-PageSize') //custom header
+            this.rests = resp.body //Restaurant[]
+        })
+
+SEGURANÇA NO BACKEND
+
+Para o back atualizar, mesmo que tiver alterando os arquivos
+Utilizar o nodemon
+
+npm i nodemon -g
+
+nodemon --watch backend backend/dist/server.js
+
+INTRODUÇÃO A JWT
+
+O que é um TOKEN?
+
+É um dado para identificar uma parte interessada, que pode ser um usuário, ou mesmo uma outra aplicação
+Tem o direito de acessar ou fazer algo em um sistema
+
+JWT - Json Web Token
+Veio para propor um padrão de token para identificar ou dar permissão pra uma das partes.
+
+JWT - ESTRUTURA DE UM TOKEN
+
+HEADER: Escrito no formato JSON, vai as informações do token, como algoritmo, tipo...
+{
+    "alg": "HS256",
+    "typ": "JWT"
+}
+
+PAYLOAD(corpo): Carrega informações(claims) que são de interesse da aplicação, como registrados(definidos), públicos ou privados.
+{
+    //PRIVADOS (INTERESSAM APENAS QUEM PRODUZ E CONSOME O TOKEN)
+    "profile": "admin",
+    "name": "John",
+    //REGISTRADOS
+    "sub": "user@host.com", //REPRESENTA O PRINCIPAL INTERESSADO
+    "iss": "my-token-manager", //REPRESENTA QUEM GEROU O TOKEN
+    "exp": "1503183549" //REPRESENTA O TEMPO DE EXPIRAÇÃO
+}
+
+Para formar o token o header e o corpo são codificados em BASE64 URL e unidos por um ponto.
+a assinatura é opcional, mas quando presente, também é unida por um ponto
+
+HEADER.PAYLOAD.SIGNATURE:
+1324edfsd.qextre43.das4344
+
+Existe uma biblioteca que gera o token API AUTH0
+jwt.sign({sub: 'user@host.com',
+          exp: Math.floor(Date.now() / 1000) + (60 * 60),
+          iss: 'meat-api'},
+          'my-signature-password')
